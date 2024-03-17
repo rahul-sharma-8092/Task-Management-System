@@ -1,0 +1,65 @@
+﻿@model TaskManagementSystem.Models.Project
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm("Edit", "Project", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="form-horizontal" style="margin: 0 auto; width: 50%; border: 1px solid #000000; padding: 20px; margin-bottom: 20px; border-radius: 5px; box-shadow: 0 0 5px #4cff00;">
+        <h2 class="text-center"> Edit Project</h2>
+
+        <div style="width: 100%; text-align: center;">@Html.ValidationMessage("message", "", new { @class = "text-danger" })</div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.TextAreaFor(model => model.Description, new { @class = "form-control" })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.StartDate, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.EditorFor(model => model.StartDate, "{0:yyyy-MM-dd}", new { htmlAttributes = new { @class = "form-control datepicker", type = "date", @Value = Model.StartDate.ToString("yyyy-MM-dd") } })
+            @Html.ValidationMessageFor(model => model.StartDate, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.EndDate, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.EditorFor(model => model.EndDate, "{0:yyyy-MM-dd}", new { htmlAttributes = new { @class = "form-control datepicker", type = "date", @Value = Model.EndDate.ToString("yyyy-MM-dd"), min = DateTime.Now.ToString("yyyy-MM-dd") } })
+            @Html.ValidationMessageFor(model => model.EndDate, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Status, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.DropDownListFor(model => model.Status, new SelectList(ViewBag.Status, "Value", "Text", "Status"), "Select Status", new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.Status, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group">
+            <input type="submit" value="Save" class="btn btn-primary" />
+        </div>
+    </div>
+}
+
+<style>
+    label {
+        max-width: 100% !important;
+        font-weight: 600;
+        font-size: 20px;
+        padding: 0px !important;
+    }
+
+    input {
+        width: 100% !important;
+    }
+
+    textarea {
+        max-block-size: 100px;
+    }
+</style>
+

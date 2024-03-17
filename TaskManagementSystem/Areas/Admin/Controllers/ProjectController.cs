@@ -14,41 +14,50 @@ namespace TaskManagementSystem.Areas.Admin.Controllers
     public class ProjectController : Controller
     {
         ProjectHandler projectHandler = new ProjectHandler();
+        Handler handler = new Handler();
 
-        // GET: Admin/Project
         [HttpGet]
         public ActionResult Index()
         {
             Project project = new Project();
             project.ProjectList = projectHandler.GetProjectList();
-
             return View(project);
         }
 
-        // GET: Admin/Project/Create
+        #region Project Create
         [HttpGet]
         public ActionResult Create()
         {
-            return View();
+            Project project = new Project();
+            project.StartDate = DateTime.Now;
+            project.EndDate = DateTime.Now;
+            return View(project);
         }
 
-        // POST: Admin/Project/Create
         [HttpPost]
         public ActionResult Create(Project project)
         {
             if (ModelState.IsValid)
             {
-                bool res = projectHandler.CreateProject(project);
+                bool IsEndDateValid = DateTime.Compare(project.StartDate, project.EndDate) <= 0;
+                if (!IsEndDateValid)
+                {
+                    ModelState.AddModelError("EndDate", "End date must be Greater than or Equal to Start date.");
+                    return View(project);
+                }
+
+                User user = handler.GetUserDetails(User.Identity.Name);
+
+                bool res = projectHandler.CreateProject(project, user.UserId);
                 if (res)
                 {
                     return RedirectToAction("Index");
                 }
             }
             return View(project);
-
         }
+        #endregion
 
-        // GET: Admin/Project/Edit/5
         [HttpGet]
         public ActionResult Edit(int id)
         {
@@ -57,23 +66,29 @@ namespace TaskManagementSystem.Areas.Admin.Controllers
             DataTable table = projectHandler.GetProjectDetails(id);
             if (table.Rows.Count > 0)
             {
-                project.Id = Convert.ToInt32(table.Rows[0]["Id"]);
-                project.Name = Convert.ToString(table.Rows[0]["Name"]);
-                project.Description = Convert.ToString(table.Rows[0]["Description"]);
+                project.Id = Convert.ToInt32(table.Rows[0]["ProjectId"]);
+                project.Name = Convert.ToString(table.Rows[0]["ProjectName"]);
+                project.Description = Convert.ToString(table.Rows[0]["ProjectDescription"]);
                 project.StartDate = Convert.ToDateTime(table.Rows[0]["StartDate"]);
                 project.EndDate = Convert.ToDateTime(table.Rows[0]["EndDate"]);
+                project.Status = Convert.ToString(table.Rows[0]["Status"]);
                 project.IsClosed = Convert.ToBoolean(table.Rows[0]["IsClosed"]);
+                project.CreatedBy = Convert.ToString(table.Rows[0]["CreatedBy"]);
+                project.UpdatedBy = Convert.ToString(table.Rows[0]["ModifiedBy"]);
             }
+
+            GetStatusList(project.Status);
             return View(project);
         }
 
-        // POST: Admin/Project/Edit/5
         [HttpPost]
         public ActionResult Edit(Project project)
         {
             if (ModelState.IsValid)
             {
-                bool res = projectHandler.EditProject(project);
+                User user = handler.GetUserDetails(User.Identity.Name);
+                project.IsClosed = project.Status == "Closed" ? true : false;
+                bool res = projectHandler.EditProject(project, user.UserId);
                 if (res)
                 {
                     return RedirectToAction("index");
@@ -82,33 +97,37 @@ namespace TaskManagementSystem.Areas.Admin.Controllers
             return View(project);
         }
 
-        // GET: Admin/Project/Delete/5
         [HttpGet]
         public ActionResult Delete(int id)
         {
-
-            return View();
+            User user = handler.GetUserDetails(User.Identity.Name);
+            bool result = projectHandler.DeleteProject(id, user.UserId);
+            if (result)
+            {
+                //Project Deleted
+            }
+            return RedirectToAction("Index");
         }
 
-        // POST: Admin/Project/Delete/5
-        [HttpPost]
-        [ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public void GetStatusList(string status)
         {
-            using (SqlConnection connection = new SqlConnection(""))
+            List<SelectListItem> statusList = new List<SelectListItem>();
+            statusList.Add(new SelectListItem
             {
-                using (SqlCommand command = new SqlCommand("DeleteProject", connection))
-                {
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Parameters.AddWithValue("@Id", id);
+                Text = "Open",
+                Value = "Open",
+                Selected = "Open" == status,
+            });
+            statusList.Add(new SelectListItem
+            {
+                Text = "Closed",
+                Value = "Closed",
+                Selected = "Closed" == status,
+            });
 
-                    connection.Open();
-                    command.ExecuteNonQuery();
-                }
-            }
+            ViewBag.Status = statusList;
 
-            return RedirectToAction("Index");
+            statusList.Clear();
         }
     }
 }
