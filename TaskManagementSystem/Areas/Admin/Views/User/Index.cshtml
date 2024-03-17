@@ -23,12 +23,12 @@
             @foreach (var item in Model.UserList)
             {
                 <tr>
-                    <td>@Html.DisplayFor(modelItem => item.FullName)</td>
-                    <td>@Html.DisplayFor(modelItem => item.Email)</td>
-                    <td class="text-center">@Html.DisplayFor(modelItem => item.Mobile)</td>
-                    <td class="text-center">@Html.DisplayFor(modelItem => item.DateOfJoining)</td>
-                    <td class="text-center">@Html.DisplayFor(modelItem => item.Role)</td>
-                    <td class="text-center">
+                    <td class="align-middle">@Html.DisplayFor(modelItem => item.FullName)</td>
+                    <td class="align-middle">@Html.DisplayFor(modelItem => item.Email)</td>
+                    <td class="align-middle text-center">@Html.DisplayFor(modelItem => item.Mobile)</td>
+                    <td class="align-middle text-center">@Html.DisplayFor(modelItem => item.DateOfJoining)</td>
+                    <td class="align-middle text-center">@Html.DisplayFor(modelItem => item.Role)</td>
+                    <td class="align-middle text-center">
                         @if (!string.IsNullOrEmpty(item.ImagePath))
                         {
                             <img src="@item.ImagePath" alt="User Image" onclick="popModel(this)" style="cursor:pointer; width: 70px; height: 70px; object-fit:cover; border-radius: 50%; border: 1px solid #000000;" />
@@ -38,13 +38,13 @@
                     </td>
                     @if (!item.IsDeleted)
                     {
-                        <td class="text-success">Active</td>
+                        <td class="text-success align-middle">Active</td>
                     }
                     else
                     {
-                        <td class="text-danger">In-Active</td>
+                        <td class="text-danger align-middle">In-Active</td>
                     }
-                    <td>
+                    <td class="align-middle">
                         <div class="dropdown text-center">
                             <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Action

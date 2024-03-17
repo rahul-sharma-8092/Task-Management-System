@@ -57,15 +57,38 @@ namespace TaskManagementSystem.Areas.Admin.Controllers
         public ActionResult Edit(int id)
         {
             User user = handler.GetUserDetails("", id);
+
             GetRoleList(user.RoleId);
-            
             return View(user);
         }
 
         [HttpPost]
         public ActionResult Edit(User user)
         {
+            GetRoleList(user.RoleId);
+
+            if (ModelState.IsValid)
+            {
+                bool result = handler.UpdateUser(user);
+                if (result)
+                {
+                    // User Updated
+                    return RedirectToAction("Index");
+                }
+                ModelState.AddModelError("message", "User not updated due to some server issue.");
+            }
             return View(user);
+        }
+
+        [HttpGet]
+        public ActionResult Delete(int id)
+        {
+            bool result = handler.DeleteUser(id);
+            if (result)
+            {
+                // User Deleted;
+            }
+            return RedirectToAction("Index");
         }
 
 
@@ -78,7 +101,7 @@ namespace TaskManagementSystem.Areas.Admin.Controllers
             {
                 Text = "Admin",
                 Value = "1",
-                 Selected = 1 == roleId
+                Selected = 1 == roleId
             });
             roleList.Add(new SelectListItem
             {

@@ -24,7 +24,7 @@ namespace TaskManagementSystem.DBHandler
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@fullName", user.FullName);
                 cmd.Parameters.AddWithValue("@email", user.Email);
-                cmd.Parameters.AddWithValue("@password",  PasswordHash.CreateHashBCrypt(user.Password));
+                cmd.Parameters.AddWithValue("@password", PasswordHash.CreateHashBCrypt(user.Password));
                 cmd.Parameters.AddWithValue("@doj", user.DateOfJoining);
                 cmd.Parameters.AddWithValue("@RoleId", Convert.ToInt32(user.Role));
                 cmd.Parameters.AddWithValue("@mobile", user.Mobile);
@@ -33,7 +33,68 @@ namespace TaskManagementSystem.DBHandler
 
                 int res = cmd.ExecuteNonQuery();
                 return res > 0;
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                conn.Dispose();
+                cmd.Dispose();
+            }
+        }
+
+        public bool UpdateUser(User user)
+        {
+            SqlConnection conn = new SqlConnection(connString);
+            SqlCommand cmd = new SqlCommand("RahulTMS_AddUpdateUser", conn);
+            try
+            {
+                conn.Open();
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                cmd.Parameters.AddWithValue("@userId", user.UserId);
+                cmd.Parameters.AddWithValue("@fullName", user.FullName);
+                cmd.Parameters.AddWithValue("@email", user.Email);
+                cmd.Parameters.AddWithValue("@doj", user.DateOfJoining);
+                cmd.Parameters.AddWithValue("@RoleId", user.RoleId);
+                cmd.Parameters.AddWithValue("@mobile", user.Mobile);
+                cmd.Parameters.AddWithValue("@image", user.Image == null ? user.ImagePath : Service.ImageSave(user.Image));
+                cmd.Parameters.AddWithValue("@query", 2);
+
+                int rowAffected = cmd.ExecuteNonQuery();
+             
+                return rowAffected > 0;
+            }
+            catch (Exception Ex)
+            {
+                throw;
+            }
+            finally
+            {
+                conn.Dispose();
+                cmd.Dispose();
+            }
+        }
+
+        public bool DeleteUser(int userId)
+        {
+            SqlConnection conn = new SqlConnection(connString);
+            SqlCommand cmd = new SqlCommand("RahulTMS_AddUpdateUser", conn);
+            try
+            {
+                conn.Open();
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                cmd.Parameters.AddWithValue("@userId", userId);
+                cmd.Parameters.AddWithValue("@query", 3);
+
+                int rowAffected = cmd.ExecuteNonQuery();
+
+                return rowAffected > 0;
+            }
+            catch (Exception Ex)
             {
                 throw;
             }
@@ -108,7 +169,8 @@ namespace TaskManagementSystem.DBHandler
                 {
                     return false;
                 }
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 throw;
             }

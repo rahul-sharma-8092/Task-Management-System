@@ -30,9 +30,9 @@ namespace TaskManagementSystem.Models
         [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
         public DateTime DateOfJoining { get; set; }
 
+        [Required]
         public int RoleId { get; set; }
 
-        [Required]
         public string Role { get; set; }
 
         public string ImagePath { get; set; }
