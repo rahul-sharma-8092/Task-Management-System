@@ -1,0 +1,152 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title | Admin - Rahul Sharma</title>
+    <link href="~/Content/CustomStyleJs/bootstrap.min.css" rel="stylesheet" />
+    <style>
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 250px;
+            padding-top: 56px;
+            background-color: #343a40;
+            color: #fff;
+        }
+
+        .main-content {
+            margin-left: 250px; 
+        }
+
+        .menu-item {
+            color: #fff;
+            font-weight: 600;
+            font-size: 20px;
+        }
+
+        .modal-dialog {
+            max-width: 90%;
+            margin: 1.75rem auto;
+        }
+
+        .modal-content img {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top" style=" background-color: #000068;">
+        <div class="container">
+            <a class="navbar-brand" href="#">Admin Dashboard</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link active" style="font-weight: 600;" href="#">@User.Identity.Name</a>
+                        </li>
+                        <li class="nav-item">
+                            @Html.ActionLink("Log Out", "Logout", "Home", new { area = "" }, new { @class = "nav-link active bg-danger", style = "font-weight: 600; border-radius: 10px; padding-top: 3px;" })
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item">
+                            @Html.ActionLink("Log In", "Index", "Home", new { area = "" }, new { @class = "nav-link active bg-danger", style = "font-weight: 600; border-radius: 10px; padding-top: 3px;" })
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Sidebar -->
+    <div class="sidebar" style="background-color: #000133;">
+        <ul class="nav flex-column">
+            <li class="nav-item bg-primary mb-2">
+                <a class="nav-link menu-item" href="#submenu1" data-toggle="collapse">User</a>
+                <ul class="nav flex-column collapse" id="submenu1">
+                    <li class="nav-item">
+                        @Html.ActionLink("Create User", "Create", "User", new { area = "Admin" }, new { @class = "nav-link menu-item" })
+                    </li>
+                    <li class="nav-item">
+                        @Html.ActionLink("User List", "Index", "User", new { area = "Admin" }, new { @class = "nav-link menu-item" })
+                    </li>
+                </ul>
+            </li>
+
+            <li class="nav-item bg-primary mb-2">
+                <a class="nav-link menu-item" href="#submenu2" data-toggle="collapse">Employee</a>
+                <ul class="nav flex-column collapse" id="submenu2">
+                    <li class="nav-item">
+                        @Html.ActionLink("Create Employee", "Create", "User", new { area = "Admin" }, new { @class = "nav-link menu-item" })
+                    </li>
+                    <li class="nav-item">
+                        @Html.ActionLink("Employee List", "Index", "User", new { area = "Admin" }, new { @class = "nav-link menu-item" })
+                    </li>
+                </ul>
+            </li>
+
+            <li class="nav-item bg-primary mb-2">
+                <a class="nav-link menu-item" href="#submenu3" data-toggle="collapse">Project</a>
+                <ul class="nav flex-column collapse" id="submenu3">
+                    <li class="nav-item">
+                        @Html.ActionLink("Create Project", "Create", "User", new { area = "Admin" }, new { @class = "nav-link menu-item" })
+                    </li>
+                    <li class="nav-item">
+                        @Html.ActionLink("Project List", "Index", "User", new { area = "Admin" }, new { @class = "nav-link menu-item" })
+                    </li>
+                </ul>
+            </li>
+
+            <li class="nav-item bg-primary mb-2">
+                <a class="nav-link menu-item" href="#submenu4" data-toggle="collapse">Task</a>
+                <ul class="nav flex-column collapse" id="submenu4">
+                    <li class="nav-item">
+                        @Html.ActionLink("Create Task", "Create", "User", new { area = "Admin" }, new { @class = "nav-link menu-item" })
+                    </li>
+                    <li class="nav-item">
+                        @Html.ActionLink("Task List", "Index", "User", new { area = "Admin" }, new { @class = "nav-link menu-item" })
+                    </li>
+                </ul>
+            </li>
+
+            <li class="nav-item bg-primary mb-2">
+                <a class="nav-link menu-item" href="#submenu5" data-toggle="collapse">Report</a>
+                <ul class="nav flex-column collapse" id="submenu5">
+                    <li class="nav-item">
+                        @Html.ActionLink("Generate Report", "Create", "User", new { area = "Admin" }, new { @class = "nav-link menu-item" })
+                    </li>
+                    <li class="nav-item">
+                        @Html.ActionLink("Report List", "Index", "User", new { area = "Admin" }, new { @class = "nav-link menu-item" })
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content" style="margin-top: 70px;">
+        <div class="container" style="max-width: none;">
+            @RenderBody()
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="~/Content/CustomStyleJs/jquery-3.5.1.slim.min.js"></script>
+    <script src="~/Content/CustomStyleJs/bootstrap.bundle.min.js"></script>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

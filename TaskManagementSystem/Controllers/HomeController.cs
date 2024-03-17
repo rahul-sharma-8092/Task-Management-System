@@ -15,23 +15,31 @@ namespace TaskManagementSystem.Controllers
         [HttpGet]
         public ActionResult Index()
         {
+            GetRoleList();
             return View();
         }
 
         [HttpPost]
-        public ActionResult Login(User user)
+        public ActionResult Index(LoginData _loginData)
         {
+            GetRoleList(); 
             if (ModelState.IsValid)
             {
                 Handler handler = new Handler();
-                User _user = handler.GetUserDetails(user.Email);
+                User _user = handler.GetUserDetails(_loginData.Email);
                 if (string.IsNullOrEmpty(_user.Email))
                 {
                     ModelState.AddModelError("Email", "Email Id Not Registered");
                     return View();
                 }
 
-                bool IsPassValid = PasswordHash.VerifyHashBCrypt(user.Password, _user.Password);
+                if (_user.RoleId.ToString() != _loginData.Role)
+                {
+                    ModelState.AddModelError("Role", "Selected Role not matched with our records.");
+                    return View();
+                }
+
+                bool IsPassValid = PasswordHash.VerifyHashBCrypt(_loginData.Password, _user.Password);
                 if (IsPassValid)
                 {
                     FormsAuthentication.SetAuthCookie(_user.Email, false);
@@ -41,7 +49,7 @@ namespace TaskManagementSystem.Controllers
                     }
                     else if (_user.Role == "User")
                     {
-                        return RedirectToAction("Index", "Home", new { area = "Users" });
+                        return RedirectToAction("Index", "Home");
                     }
                     else if (_user.Role == "Employee")
                     {
@@ -52,5 +60,52 @@ namespace TaskManagementSystem.Controllers
             }
             return View();
         }
+
+        [HttpGet]
+        public ActionResult LogOut()
+        {
+            FormsAuthentication.SignOut();
+            return RedirectToAction("Index");
+        }
+
+        private void GetRoleList()
+        {
+            List<SelectListItem> roleList = new List<SelectListItem>();
+            roleList.Add(new SelectListItem
+            {
+                Text = "Admin",
+                Value = "1"
+            });
+            roleList.Add(new SelectListItem
+            {
+                Text = "Employee",
+                Value = "2"
+            });
+            roleList.Add(new SelectListItem
+            {
+                Text = "Client",
+                Value = "3"
+            });
+
+            ViewBag.RoleList = roleList;
+            roleList = null;
+        }
+
+        #region Generate Password for Admin Registration
+        [HttpPost]
+        public ActionResult GeneratePassword(string Pass)
+        {
+            string hashPass = PasswordHash.CreateHashBCrypt(Pass);
+            ViewBag.HashPass = hashPass;
+            return View();
+        }
+
+        [HttpGet]
+        public ActionResult GeneratePassword()
+        {
+            ViewBag.HashPass = "";
+            return View();
+        }
+        #endregion
     }
 }

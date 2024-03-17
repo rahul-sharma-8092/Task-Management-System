@@ -1,0 +1,103 @@
+﻿@model TaskManagementSystem.Models.User
+
+@{
+    ViewBag.Title = "Edit User";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm("Edit", "User", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="form-horizontal" style="margin: 0 auto; width: 50%; border: 1px solid #000000; padding: 20px; margin-bottom: 20px; border-radius: 5px; box-shadow: 0 0 5px #4cff00;">
+        <h2 class="text-center">Edit User</h2>
+
+        <div style="width: 100%; text-align: center;">@Html.ValidationMessage("message", "", new { @class = "text-danger" })</div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Role, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.DropDownListFor(model => model.RoleId, new SelectList(ViewBag.RoleList, "Value", "Text", "Selected"), "---Select Role---", new { @class = "text-center form-control" })
+            @Html.ValidationMessageFor(model => model.Role, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.FullName, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.EditorFor(model => model.FullName, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.FullName, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+            @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+        </div>
+
+        @*<div class="form-group">
+                @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label col-md-2" })
+                @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control", @type="Password" } })
+                @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+            </div>*@
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Mobile, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.EditorFor(model => model.Mobile, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Mobile, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.DateOfJoining, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.EditorFor(model => model.DateOfJoining, new { htmlAttributes = new { @class = "form-control", type = "date", @Value = Model.DateOfJoining.ToString("yyyy-MM-dd") } })
+            @Html.ValidationMessageFor(model => model.DateOfJoining, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Image, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.TextBoxFor(model => model.Image, new { type = "file", @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.Image, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group" style="text-align:center; max-height: 200px;">
+            @if (string.IsNullOrEmpty(Model.ImagePath))
+            {
+                <span class="text-danger" id="noImage">No Image Found</span>
+            }
+            <img src="@Model.ImagePath" id="imgViewer" alt="" style="max-height: 200px; border-radius: 10px; border: 1px solid #000000;" />
+        </div>
+
+
+        <div class="form-group">
+            <input type="submit" value="Save" class="btn btn-primary" />
+        </div>
+    </div>
+}
+
+<style>
+    label {
+        max-width: 100% !important;
+        font-weight: 600;
+        font-size: 20px;
+        padding: 0px !important;
+    }
+
+    input {
+        width: 100% !important;
+    }
+</style>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $(document).ready(function () {
+            function displayImage(input) {
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        $('#imgViewer').attr('src', e.target.result);
+                        $('#noImage').empty();
+                    }
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+            $('#Image').change(function () {
+                displayImage(this);
+            });
+        });
+    </script>
+}

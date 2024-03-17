@@ -86,7 +86,8 @@ namespace TaskManagementSystem.Areas.Admin.Controllers
         [HttpGet]
         public ActionResult Delete(int id)
         {
-            bool res = projectHandler.
+
+            return View();
         }
 
         // POST: Admin/Project/Delete/5
@@ -95,7 +96,7 @@ namespace TaskManagementSystem.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
+            using (SqlConnection connection = new SqlConnection(""))
             {
                 using (SqlCommand command = new SqlCommand("DeleteProject", connection))
                 {

@@ -6,25 +6,132 @@ using System.Linq;
 using System.Web;
 using System.Data;
 using TaskManagementSystem.Models;
+using TaskManagementSystem.Common;
 
 namespace TaskManagementSystem.DBHandler
 {
     public class Handler
     {
-        string connString = ConfigurationManager.ConnectionStrings[""].ConnectionString;
+        string connString = ConfigurationManager.ConnectionStrings["dbRahulConn"].ConnectionString;
 
-        public User GetUserDetails(string email)
+        public bool CreateUser(User user)
         {
             SqlConnection conn = new SqlConnection(connString);
-            conn.Open();
-            SqlCommand cmd = new SqlCommand("GetUserDetails", conn);
-
+            SqlCommand cmd = new SqlCommand("RahulTMS_AddUpdateUser", conn);
             try
             {
+                conn.Open();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@fullName", user.FullName);
+                cmd.Parameters.AddWithValue("@email", user.Email);
+                cmd.Parameters.AddWithValue("@password",  PasswordHash.CreateHashBCrypt(user.Password));
+                cmd.Parameters.AddWithValue("@doj", user.DateOfJoining);
+                cmd.Parameters.AddWithValue("@RoleId", Convert.ToInt32(user.Role));
+                cmd.Parameters.AddWithValue("@mobile", user.Mobile);
+                cmd.Parameters.AddWithValue("@image", Service.ImageSave(user.Image));
+                cmd.Parameters.AddWithValue("@query", 1);
+
+                int res = cmd.ExecuteNonQuery();
+                return res > 0;
+            }catch(Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                conn.Dispose();
+                cmd.Dispose();
+            }
+        }
+
+        public List<User> GetUserList()
+        {
+            List<User> list = new List<User>();
+            SqlConnection conn = new SqlConnection(connString);
+            SqlCommand cmd = new SqlCommand("RahulTMS_GetUsersList", conn);
+            try
+            {
+                conn.Open();
+                cmd.CommandType = CommandType.StoredProcedure;
+                SqlDataAdapter adapter = new SqlDataAdapter();
+                adapter.SelectCommand = cmd;
+
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                foreach (DataRow item in dt.Rows)
+                {
+                    list.Add(new User
+                    {
+                        UserId = Convert.ToInt32(item["UserId"]),
+                        FullName = Convert.ToString(item["FullName"]),
+                        Email = Convert.ToString(item["Email"]),
+                        Password = Convert.ToString(item["Password"]),
+                        Mobile = Convert.ToString(item["Mobile"]),
+                        DateOfJoining = Convert.ToDateTime(item["DateOfJoining"]),
+                        Role = Convert.ToString(item["Role"]),
+                        RoleId = Convert.ToInt32(item["RoleId"]),
+                        ImagePath = Convert.ToString(item["Image"]),
+                        IsDeleted = Convert.ToBoolean(item["IsDeleted"])
+                    });
+                }
+                return list;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                conn.Dispose();
+                cmd.Dispose();
+            }
+        }
+
+        public bool IsEmailExists(string email)
+        {
+            SqlConnection conn = new SqlConnection(connString);
+            SqlCommand cmd = new SqlCommand("RahulTMS_CheckEmailExists", conn);
+            try
+            {
+                conn.Open();
+                cmd.Parameters.AddWithValue("@email", email);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                if (reader.HasRows)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }catch(Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                conn.Dispose();
+                cmd.Dispose();
+            }
+        }
+
+        public User GetUserDetails(string email = "", int id = 0)
+        {
+            SqlConnection conn = new SqlConnection(connString);
+            SqlCommand cmd = new SqlCommand("RahulTMS__GetUserDetailByEmail", conn);
+            try
+            {
+                conn.Open();
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@email", email);
+                cmd.Parameters.AddWithValue("@userId", id);
 
                 SqlDataAdapter adapter = new SqlDataAdapter();
+                adapter.SelectCommand = cmd;
                 DataTable dt = new DataTable();
 
                 User user = new User();
@@ -32,12 +139,15 @@ namespace TaskManagementSystem.DBHandler
 
                 if (dt.Rows.Count > 0)
                 {
-                    user.Id = Convert.ToInt32(dt.Rows[0]["Name"]);
-                    user.Name = Convert.ToString(dt.Rows[0]["Name"]);
-                    user.Email = Convert.ToString(dt.Rows[0]["Name"]);
-                    user.Password = Convert.ToString(dt.Rows[0]["Name"]);
-                    user.Mobile = Convert.ToString(dt.Rows[0]["Name"]);
-                    user.Role = Convert.ToString(dt.Rows[0]["Name"]);
+                    user.UserId = Convert.ToInt32(dt.Rows[0]["UserId"]);
+                    user.FullName = Convert.ToString(dt.Rows[0]["FullName"]);
+                    user.Email = Convert.ToString(dt.Rows[0]["Email"]);
+                    user.Password = Convert.ToString(dt.Rows[0]["Password"]);
+                    user.Mobile = Convert.ToString(dt.Rows[0]["Mobile"]);
+                    user.DateOfJoining = Convert.ToDateTime(dt.Rows[0]["DateOfJoining"]);
+                    user.RoleId = Convert.ToInt32(dt.Rows[0]["RoleId"]);
+                    user.Role = Convert.ToString(dt.Rows[0]["Role"]);
+                    user.ImagePath = Convert.ToString(dt.Rows[0]["Image"]);
                 }
                 return user;
             }
@@ -55,15 +165,16 @@ namespace TaskManagementSystem.DBHandler
         public string[] GetUsersRole(string email)
         {
             SqlConnection conn = new SqlConnection(connString);
-            conn.Open();
-            SqlCommand cmd = new SqlCommand("GetUsersRole__ByEmail", conn);
+            SqlCommand cmd = new SqlCommand("RahulTMS__GetUsersRoleByEmail", conn);
 
             try
             {
+                conn.Open();
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@email", email);
 
                 SqlDataAdapter adapter = new SqlDataAdapter();
+                adapter.SelectCommand = cmd;
                 DataTable dt = new DataTable();
                 adapter.Fill(dt);
 
@@ -72,7 +183,7 @@ namespace TaskManagementSystem.DBHandler
 
                 if (dt.Rows.Count > 0)
                 {
-                    foreach(DataRow row in dt.Rows)
+                    foreach (DataRow row in dt.Rows)
                     {
                         roleList.Add(Convert.ToString(row["Role"]));
                     }
