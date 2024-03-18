@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Security;
+using TaskManagementSystem.Common;
 using TaskManagementSystem.DBHandler;
 
 namespace TaskManagementSystem
@@ -39,7 +40,8 @@ namespace TaskManagementSystem
         public override string[] GetRolesForUser(string username)
         {
             Handler handler = new Handler();
-            string[] roles = handler.GetUsersRole(username);
+            
+            string[] roles = handler.GetUsersRole(Encryption.Decrypt(username.Split('|')[2]));
             return roles;
         }
 

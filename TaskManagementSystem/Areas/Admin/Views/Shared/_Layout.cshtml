@@ -52,7 +52,7 @@
                     @if (User.Identity.IsAuthenticated)
                     {
                         <li class="nav-item">
-                            <a class="nav-link active" style="font-weight: 600;" href="#">@User.Identity.Name</a>
+                            <a class="nav-link active" style="font-weight: 600;" href="#">@TaskManagementSystem.Common.Encryption.Decrypt(User.Identity.Name.Split('|')[1])</a>
                         </li>
                         <li class="nav-item">
                             @Html.ActionLink("Log Out", "Logout", "Home", new { area = "" }, new { @class = "nav-link active bg-danger", style = "font-weight: 600; border-radius: 10px; padding-top: 3px;" })

@@ -140,6 +140,7 @@
     <Compile Include="Areas\Admin\Controllers\HomeController.cs" />
     <Compile Include="Areas\Admin\Controllers\ProjectController.cs" />
     <Compile Include="Areas\Admin\Controllers\UserController.cs" />
+    <Compile Include="Common\Encryption.cs" />
     <Compile Include="Common\PasswordHash.cs" />
     <Compile Include="Common\Service.cs" />
     <Compile Include="Controllers\HomeController.cs" />

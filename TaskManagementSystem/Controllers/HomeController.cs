@@ -15,6 +15,7 @@ namespace TaskManagementSystem.Controllers
         [HttpGet]
         public ActionResult Index()
         {
+            
             GetRoleList();
             return View();
         }
@@ -42,7 +43,16 @@ namespace TaskManagementSystem.Controllers
                 bool IsPassValid = PasswordHash.VerifyHashBCrypt(_loginData.Password, _user.Password);
                 if (IsPassValid)
                 {
-                    FormsAuthentication.SetAuthCookie(_user.Email, false);
+                    string authToken = string.Empty;
+                    string UserId = Encryption.Encrypt(_user.UserId.ToString());
+                    string FullName = Encryption.Encrypt(_user.FullName);
+                    string Email = Encryption.Encrypt(_user.Email);
+                    string RoleId = Encryption.Encrypt(_user.RoleId.ToString());
+
+                    authToken = UserId + "|" + FullName + "|" + Email + "|" + RoleId;
+
+                    FormsAuthentication.SetAuthCookie(authToken, false);
+                    
                     if (_user.Role == "Admin")
                     {
                         return RedirectToAction("Index", "Home", new { area = "Admin" });
