@@ -143,12 +143,14 @@
     <Compile Include="Common\Encryption.cs" />
     <Compile Include="Common\PasswordHash.cs" />
     <Compile Include="Common\Service.cs" />
+    <Compile Include="Controllers\AttachmentController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="DBHandler\Handler.cs" />
     <Compile Include="DBHandler\ProjectHandler.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Attachment.cs" />
     <Compile Include="Models\LoginData.cs" />
     <Compile Include="Models\Project.cs" />
     <Compile Include="Models\User.cs" />
@@ -164,6 +166,7 @@
     <Content Include="App_Data\DB Sql\RahulTMS_GetUsersList.sql" />
     <Content Include="App_Data\DB Sql\RahulTMS__GetUserDetailByEmail.sql" />
     <Content Include="App_Data\DB Sql\RahulTMS__GetUsersRoleByEmail.sql" />
+    <Content Include="App_Data\DB Sql\RahulTMS__SaveTaskAttachment.sql" />
     <Content Include="Content\bootstrap-grid.css" />
     <Content Include="Content\bootstrap-grid.min.css" />
     <Content Include="Content\bootstrap-grid.rtl.css" />
@@ -226,6 +229,7 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Home\GeneratePassword.cshtml" />
+    <Content Include="Views\Attachment\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\Admin\Data\" />
