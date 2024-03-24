@@ -159,6 +159,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\DB Sql\1.sql" />
+    <Content Include="App_Data\DB Sql\RahulTMS_AddUpdateLoginAttempt.sql" />
     <Content Include="App_Data\DB Sql\RahulTMS_AddUpdateProject.sql" />
     <Content Include="App_Data\DB Sql\RahulTMS_AddUpdateUser.sql" />
     <Content Include="App_Data\DB Sql\RahulTMS_CheckEmailExists.sql" />
