@@ -14,10 +14,16 @@ namespace TaskManagementSystem.Areas.Admin.Controllers
         Handler handler = new Handler();
 
 
-        public ActionResult Index()
+        public ActionResult Index(int pageIndex = 1, int pageSize = 5)
         {
-            User user = new User();
-            user.UserList = handler.GetUserList();
+            UserWithPagination user = new UserWithPagination();
+            user.UserList = handler.GetUserList(pageIndex, pageSize);
+
+            user.Pagination.PageIndex = pageIndex;
+            user.Pagination.PageSize = pageSize;
+            user.Pagination.TotalRows = user.UserList[0].TotalUsers;
+            user.Pagination.TotalPage = (int)Math.Ceiling((double)user.Pagination.TotalRows / pageSize);
+
             return View(user);
         }
 
@@ -53,6 +59,7 @@ namespace TaskManagementSystem.Areas.Admin.Controllers
         }
         #endregion
 
+        #region Edit User
         [HttpGet]
         public ActionResult Edit(int id)
         {
@@ -79,7 +86,9 @@ namespace TaskManagementSystem.Areas.Admin.Controllers
             }
             return View(user);
         }
+        #endregion
 
+        #region Delete
         [HttpGet]
         public ActionResult Delete(int id)
         {
@@ -90,10 +99,9 @@ namespace TaskManagementSystem.Areas.Admin.Controllers
             }
             return RedirectToAction("Index");
         }
+        #endregion
 
-
-
-
+        #region GetRoleList
         private void GetRoleList(int roleId)
         {
             List<SelectListItem> roleList = new List<SelectListItem>();
@@ -118,6 +126,6 @@ namespace TaskManagementSystem.Areas.Admin.Controllers
 
             ViewBag.RoleList = roleList;
         }
-
+        #endregion
     }
 }

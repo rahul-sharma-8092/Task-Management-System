@@ -41,6 +41,16 @@ namespace TaskManagementSystem.Models
 
         public bool IsDeleted { get; set; }
 
+        public int TotalUsers { get; set; }
+
         public List<User> UserList { get; set; }
+
+    }
+
+    public class UserWithPagination
+    {
+        public List<User> UserList { get; set; }
+
+        public Pagination Pagination { get; set; } = new Pagination();
     }
 }

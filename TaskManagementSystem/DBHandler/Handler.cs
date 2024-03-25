@@ -105,7 +105,7 @@ namespace TaskManagementSystem.DBHandler
             }
         }
 
-        public List<User> GetUserList()
+        public List<User> GetUserList(int pageIndex, int pageSize)
         {
             List<User> list = new List<User>();
             SqlConnection conn = new SqlConnection(connString);
@@ -114,6 +114,9 @@ namespace TaskManagementSystem.DBHandler
             {
                 conn.Open();
                 cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@pageIndex", pageIndex);
+                cmd.Parameters.AddWithValue("@pageSize", pageSize);
+
                 SqlDataAdapter adapter = new SqlDataAdapter();
                 adapter.SelectCommand = cmd;
 
@@ -133,7 +136,8 @@ namespace TaskManagementSystem.DBHandler
                         Role = Convert.ToString(item["Role"]),
                         RoleId = Convert.ToInt32(item["RoleId"]),
                         ImagePath = Convert.ToString(item["Image"]),
-                        IsDeleted = Convert.ToBoolean(item["IsDeleted"])
+                        IsDeleted = Convert.ToBoolean(item["IsDeleted"]),
+                        TotalUsers = Convert.ToInt32(item["TotalRows"]),
                     });
                 }
                 return list;
