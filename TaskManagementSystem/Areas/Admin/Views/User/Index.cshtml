@@ -6,6 +6,12 @@
 }
 <div class="">
     <h3 class="text-center" style="color: #0026ff;">User List</h3>
+    <div style="margin-bottom: 10px; float: right">
+        <form action="/Admin/User/Index" method="get">
+            <input type="search" name="Search" id="Search" value="@Request.QueryString["Search"]" class="btn-outline-primary btn text-left" tabindex="1" placeholder="Search" />
+            <button class="btn btn-outline-primary" tabindex="2">Search</button>
+        </form>
+    </div>
     <table class="table table-striped table-hover" style="border: 1px solid #808080">
         <thead class="thead-dark">
             <tr>
@@ -62,43 +68,43 @@
     <div style="width : fit-content; margin: 0px auto; padding: 5px;">
 
         <select onchange="window.location.href = this.value" class="btn btn-outline-primary">
-            @foreach (int pageSize in new List<int> { 5, 10, 25, 50})
+            @foreach (int pageSize in new List<int> { 5, 10, 25, 50 })
             {
-                <option @(pageSize == Model.Pagination.PageSize ? "selected" : "") value="@Url.Action("Index", "User", new { area = "Admin", pageIndex = 1, pageSize = pageSize })">
-                    @pageSize 
+                <option @(pageSize == Model.Pagination.PageSize ? "selected" : "") value="@Url.Action("Index", "User", new { area = "Admin", pageIndex = 1, pageSize = pageSize, Search=@Request.QueryString["Search"] })">
+                    @pageSize
                 </option>
             }
         </select>
 
-        <a href="@Url.Action("Index", "User", new {area = "Admin", pageIndex = 1})">
+        <a href="@Url.Action("Index", "User", new {area = "Admin", pageIndex = 1, pageSize = Model.Pagination.PageSize,  Search=@Request.QueryString["Search"]})">
             <button class="btn btn-outline-primary" @(Model.Pagination.PageIndex == 1 ? "disabled" : "")>First</button>
         </a>
 
-        <a href="@Url.Action("Index", "User", new {area = "Admin", pageIndex = Model.Pagination.PageIndex - 1 == 0 ? 1 : Model.Pagination.PageIndex - 1})">
+        <a href="@Url.Action("Index", "User", new {area = "Admin", Search=@Request.QueryString["Search"], pageIndex = Model.Pagination.PageIndex - 1 == 0 ? 1 : Model.Pagination.PageIndex - 1, pageSize = Model.Pagination.PageSize,})">
             <button class="btn btn-outline-primary" @(Model.Pagination.PageIndex == 1 ? "disabled" : "")>Prev</button>
         </a>
 
         @for (int i = 1; i <= Model.Pagination.TotalPage; i++)
         {
-            <a href="@Url.Action("Index", "User", new {area = "Admin", pageIndex = i})">
-               
-                    @if (i == Model.Pagination.PageIndex)
-                    {
-                        <button class="btn btn-outline-primary active" >@i</button>
-                    }
-                    else
-                    {
-                        <button class="btn btn-outline-primary">@i</button>
-                    }
-               
+            <a href="@Url.Action("Index", "User", new {area = "Admin", pageIndex = i, pageSize = Model.Pagination.PageSize, Search=@Request.QueryString["Search"]})">
+
+                @if (i == Model.Pagination.PageIndex)
+                {
+                    <button class="btn btn-outline-primary active">@i</button>
+                }
+                else
+                {
+                    <button class="btn btn-outline-primary">@i</button>
+                }
+
             </a>
         }
 
-        <a href="@Url.Action("Index", "User", new {area = "Admin", pageIndex = Model.Pagination.PageIndex + 1 > Model.Pagination.TotalPage ? Model.Pagination.TotalPage : Model.Pagination.PageIndex + 1})">
+        <a href="@Url.Action("Index", "User", new {area = "Admin", pageIndex = Model.Pagination.PageIndex + 1 > Model.Pagination.TotalPage ? Model.Pagination.TotalPage : Model.Pagination.PageIndex + 1, pageSize = Model.Pagination.PageSize, Search=@Request.QueryString["Search"]})">
             <button class="btn btn-outline-primary" @(Model.Pagination.PageIndex + 1 > Model.Pagination.TotalPage ? "disabled" : "")>Next</button>
         </a>
 
-        <a href="@Url.Action("Index", "User", new {area = "Admin", pageIndex = Model.Pagination.TotalPage})">
+        <a href="@Url.Action("Index", "User", new {area = "Admin", pageIndex = Model.Pagination.TotalPage, pageSize = Model.Pagination.PageSize, Search=@Request.QueryString["Search"]})">
             <button class="btn btn-outline-primary" @(Model.Pagination.PageIndex == Model.Pagination.TotalPage ? "disabled" : "")>Last</button>
         </a>
 

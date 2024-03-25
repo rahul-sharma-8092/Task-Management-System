@@ -105,7 +105,7 @@ namespace TaskManagementSystem.DBHandler
             }
         }
 
-        public List<User> GetUserList(int pageIndex, int pageSize)
+        public List<User> GetUserList(int pageIndex, int pageSize, string Search)
         {
             List<User> list = new List<User>();
             SqlConnection conn = new SqlConnection(connString);
@@ -116,6 +116,7 @@ namespace TaskManagementSystem.DBHandler
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@pageIndex", pageIndex);
                 cmd.Parameters.AddWithValue("@pageSize", pageSize);
+                cmd.Parameters.AddWithValue("@search", Search);
 
                 SqlDataAdapter adapter = new SqlDataAdapter();
                 adapter.SelectCommand = cmd;

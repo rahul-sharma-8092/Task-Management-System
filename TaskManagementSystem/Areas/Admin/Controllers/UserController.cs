@@ -14,10 +14,10 @@ namespace TaskManagementSystem.Areas.Admin.Controllers
         Handler handler = new Handler();
 
 
-        public ActionResult Index(int pageIndex = 1, int pageSize = 5)
+        public ActionResult Index(int pageIndex = 1, int pageSize = 5, string Search = "")
         {
             UserWithPagination user = new UserWithPagination();
-            user.UserList = handler.GetUserList(pageIndex, pageSize);
+            user.UserList = handler.GetUserList(pageIndex, pageSize, Search);
 
             user.Pagination.PageIndex = pageIndex;
             user.Pagination.PageSize = pageSize;
