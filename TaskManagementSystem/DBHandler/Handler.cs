@@ -64,7 +64,7 @@ namespace TaskManagementSystem.DBHandler
                 cmd.Parameters.AddWithValue("@query", 2);
 
                 int rowAffected = cmd.ExecuteNonQuery();
-             
+
                 return rowAffected > 0;
             }
             catch (Exception Ex)
@@ -254,6 +254,93 @@ namespace TaskManagementSystem.DBHandler
                 return roles;
             }
             catch (Exception Ex)
+            {
+                throw;
+            }
+            finally
+            {
+                conn.Dispose();
+                cmd.Dispose();
+            }
+        }
+
+        public bool SaveForgotPassToken(string email, int userId, string token)
+        {
+            SqlConnection conn = new SqlConnection(connString);
+            SqlCommand cmd = new SqlCommand("RahulTMS__AddUpdateForgotPasswordToken", conn);
+            try
+            {
+                conn.Open();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@email", email);
+                cmd.Parameters.AddWithValue("@userId", userId);
+                cmd.Parameters.AddWithValue("@token", token);
+                cmd.Parameters.AddWithValue("@query", 1);
+
+                int res = cmd.ExecuteNonQuery();
+                return res > 0;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                conn.Dispose();
+                cmd.Dispose();
+            }
+        }
+
+        public DataTable GetForgotPassToken(string email, int userId)
+        {
+            SqlConnection conn = new SqlConnection(connString);
+            SqlCommand cmd = new SqlCommand("RahulTMS__AddUpdateForgotPasswordToken", conn);
+            try
+            {
+                conn.Open();
+
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@email", email);
+                cmd.Parameters.AddWithValue("@userId", userId);
+                cmd.Parameters.AddWithValue("@query", 2);
+
+                SqlDataAdapter sda = new SqlDataAdapter();
+                sda.SelectCommand = cmd;
+
+                DataTable dt = new DataTable();
+                sda.Fill(dt);
+
+                return dt;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                conn.Dispose();
+                cmd.Dispose();
+            }
+        }
+
+        public bool PasswordChanged(string email, int userId, string password)
+        {
+            SqlConnection conn = new SqlConnection(connString);
+            SqlCommand cmd = new SqlCommand("RahulTMS_AddUpdateUser", conn);
+            try
+            {
+                conn.Open();
+
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@email", email);
+                cmd.Parameters.AddWithValue("@userId", userId);
+                cmd.Parameters.AddWithValue("@password", PasswordHash.CreateHashBCrypt(password));
+                cmd.Parameters.AddWithValue("@query", 4);
+
+                int rowAffected = cmd.ExecuteNonQuery();
+                return rowAffected > 0;
+            }
+            catch (Exception)
             {
                 throw;
             }

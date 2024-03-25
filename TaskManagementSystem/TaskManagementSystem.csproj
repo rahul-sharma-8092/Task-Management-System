@@ -141,6 +141,7 @@
     <Compile Include="Areas\Admin\Controllers\ProjectController.cs" />
     <Compile Include="Areas\Admin\Controllers\UserController.cs" />
     <Compile Include="Common\Encryption.cs" />
+    <Compile Include="Common\Logger.cs" />
     <Compile Include="Common\PasswordHash.cs" />
     <Compile Include="Common\Service.cs" />
     <Compile Include="Controllers\AttachmentController.cs" />
@@ -231,6 +232,8 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Home\GeneratePassword.cshtml" />
     <Content Include="Views\Attachment\Index.cshtml" />
+    <Content Include="Views\Home\ForgotPassword.cshtml" />
+    <Content Include="Views\Home\ResetPassword.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\Admin\Data\" />
